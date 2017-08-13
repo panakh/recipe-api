@@ -15,6 +15,13 @@ $app->get('/', function () use ($app) {
 ->bind('homepage')
 ;
 
+$app->post('/recipes', function(Request $request) use ($app) {
+
+    $dataHandle = fopen(realpath($app['data.csv']), 'a+');
+    fputcsv($dataHandle, json_decode($request->getContent(), true));
+    return new Response($request->getContent());
+});
+
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {
         return;

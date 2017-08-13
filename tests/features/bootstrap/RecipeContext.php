@@ -17,6 +17,11 @@ class RecipeContext implements Context
     private $title;
     private $marketingDescription;
     private $recipeClient;
+    private $recipeCSVAccess;
+    /**
+     * @var string
+     */
+    private $csvPath;
 
 
     /**
@@ -32,6 +37,15 @@ class RecipeContext implements Context
         $guzzle = $guzzleClientFactory->createClient($baseUrl);
         $this->recipeClient = new RecipeClient($guzzle);
         $this->recipeCSVAccess = new RecipeCSVAccess($csvPath);
+        $this->csvPath = $csvPath;
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function deleteRecords()
+    {
+        file_put_contents($this->csvPath, "title, marketing_description\n");
     }
 
     /**
@@ -65,7 +79,7 @@ class RecipeContext implements Context
      */
     public function theRecipeIsCreated()
     {
-        Assert::assertTrue($this->recipeCSVAccess->recipeExists($this->title()));
+        Assert::assertTrue($this->recipeCSVAccess->recipeExists($this->title));
     }
 
 }
