@@ -1,0 +1,6 @@
+suites:
+    api:
+        namespace: SDK
+        psr4_prefix: SDK
+        src_path: %paths.config%/src/client
+        spec_path: %paths.config%/tests/client
