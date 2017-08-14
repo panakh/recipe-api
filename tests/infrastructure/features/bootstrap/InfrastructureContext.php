@@ -4,6 +4,8 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Gousto\Recipe;
+use Gousto\RecipeRepository;
 use PHPUnit\Framework\Assert;
 use SDK\GuzzleClientFactory;
 use SDK\RecipeClient;
@@ -12,14 +14,14 @@ use SDK\RecipeCSVAccess;
 /**
  * Defines application features from the specific context.
  */
-class CSVAccessContext implements Context
+class InfrastructureContext implements Context
 {
     /**
      * @var string
      */
     private $csvPath;
-    private $csvAccess;
-    private $exists = false;
+    private $recipeRepository;
+    private $recipe;
 
     /**
      * Initializes context.
@@ -32,7 +34,7 @@ class CSVAccessContext implements Context
     public function __construct(string $csvPath)
     {
         $this->csvPath = $csvPath;
-        $this->csvAccess = new RecipeCSVAccess($this->csvPath);
+        $this->recipeRepository = new RecipeRepository($this->csvPath);
     }
 
     /**
@@ -41,14 +43,6 @@ class CSVAccessContext implements Context
     public function cleanFile()
     {
         file_put_contents($this->csvPath, '');
-    }
-
-    /**
-     * @Given CSV content
-     */
-    public function csvContent(PyStringNode $content)
-    {
-        file_put_contents($this->csvPath, $content, FILE_APPEND);
     }
 
     /**
@@ -70,20 +64,27 @@ class CSVAccessContext implements Context
     }
 
     /**
-     * @When I check if the recipe :title exists
-     * @param string $title
+     * @Given recipe
      */
-    public function iCheckIfTheRecipeExists(string $title)
+    public function recipe(TableNode $table)
     {
-        $this->exists = $this->csvAccess->recipeExists($title);
+        $this->recipe = Recipe::fromData($table->getColumnsHash()[0]);
     }
 
     /**
-     * @Then the recipe is found
+     * @When I save recipe
      */
-    public function theRecipeIsFound()
+    public function iSaveRecipe()
     {
-        Assert::assertTrue($this->exists);
+        $this->recipeRepository->save($this->recipe);
     }
 
+    /**
+     * @Then recipe is saved
+     */
+    public function recipeIsSaved()
+    {
+        Assert::assertEquals(1, $this->recipe->getId());
+        Assert::assertTrue($this->recipeRepository->hasSaved($this->recipe));
+    }
 }

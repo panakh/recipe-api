@@ -1,5 +1,6 @@
 <?php
 
+use Gousto\Recipe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,8 +18,8 @@ $app->get('/', function () use ($app) {
 
 $app->post('/recipes', function(Request $request) use ($app) {
 
-    $dataHandle = fopen(realpath($app['data.csv']), 'a+');
-    fputcsv($dataHandle, json_decode($request->getContent(), true));
+    $recipe = Recipe::fromData(json_decode($request->getContent(), true));
+    $app['repository.recipe']->save($recipe);
     return new Response($request->getContent());
 });
 

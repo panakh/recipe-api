@@ -3,6 +3,7 @@
 namespace SDK;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ServerException;
 use Psr\Http\Message\ResponseInterface;
 
 class RecipeClient
@@ -17,13 +18,10 @@ class RecipeClient
         $this->client = $client;
     }
 
-    public function createRecipe(string $title, string $marketingDescription): ResponseInterface
+    public function createRecipe(array $recipe): ResponseInterface
     {
         $response = $this->client->post('/recipes', [
-            'json' => [
-                'title' => $title,
-                'marketingDescription' => $marketingDescription
-            ]
+            'json' => $recipe
         ]);
 
         return $response;

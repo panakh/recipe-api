@@ -22,14 +22,13 @@ class RecipeClientSpec extends ObjectBehavior
 
     function it_creates_recipe(Client $client, ResponseInterface $response)
     {
-        $title = 'title';
-        $marketingDescription = 'marketing description';
+        $recipe = [
+            'title' => 'asian curry',
+            'marketingDescription' => 'curry description'
+        ];
         $client->post('/recipes', [
-            'json' => [
-                'title' => $title,
-                'marketingDescription' => $marketingDescription
-            ]
+            'json' => $recipe
         ])->shouldBeCalled()->willReturn($response);
-        $this->createRecipe($title, $marketingDescription)->shouldBe($response);
+        $this->createRecipe($recipe);
     }
 }

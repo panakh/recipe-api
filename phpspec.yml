@@ -4,3 +4,9 @@ suites:
         psr4_prefix: SDK
         src_path: %paths.config%/src/client
         spec_path: %paths.config%/tests/client
+
+    domain:
+        namespace: Gousto
+        psr4_prefix: Gousto
+        src_path: %paths.config%/src/domain
+        spec_path: %paths.config%/tests/domain

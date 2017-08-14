@@ -14,14 +14,13 @@ use SDK\RecipeCSVAccess;
  */
 class RecipeContext implements Context
 {
-    private $title;
-    private $marketingDescription;
     private $recipeClient;
     private $recipeCSVAccess;
     /**
      * @var string
      */
     private $csvPath;
+    private $recipe;
 
 
     /**
@@ -45,25 +44,36 @@ class RecipeContext implements Context
      */
     public function deleteRecords()
     {
-        file_put_contents($this->csvPath, "title, marketing_description\n");
-    }
+        $headers = [
+            'id',
+            'created_at',
+            'updated_at',
+            'box_type',
+            'title',
+            'slug',
+            'short_title',
+            'marketing_description',
+            'calories_kcal',
+            'protein_grams',
+            'fat_grams',
+            'carbs_grams',
+            'bulletpoint1',
+            'bulletpoint2',
+            'bulletpoint3',
+            'recipe_diet_type',
+            'season',
+            'base',
+            'protein_source',
+            'preparation_time_minutes',
+            'shelf_life_days',
+            'equipment_needed',
+            'origin_country',
+            'recipe_cuisine',
+            'in_your_box',
+            'gousto_reference'
+        ];
 
-    /**
-     * @Given title :title
-     * @param string $title
-     */
-    public function title(string $title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @Given marketing description :marketingDescription
-     * @param string $marketingDescription
-     */
-    public function marketingDescription(string $marketingDescription)
-    {
-        $this->marketingDescription = $marketingDescription;
+        file_put_contents($this->csvPath, implode(',', $headers) . "\n");
     }
 
     /**
@@ -71,7 +81,7 @@ class RecipeContext implements Context
      */
     public function iCreateARecipe()
     {
-        $this->recipeClient->createRecipe($this->title, $this->marketingDescription);
+        $this->recipeClient->createRecipe($this->recipe);
     }
 
     /**
@@ -79,7 +89,15 @@ class RecipeContext implements Context
      */
     public function theRecipeIsCreated()
     {
-        Assert::assertTrue($this->recipeCSVAccess->recipeExists($this->title));
+        Assert::assertTrue($this->recipeCSVAccess->recipeExists($this->recipe['title']));
     }
 
+
+    /**
+     * @Given recipe
+     */
+    public function recipe(TableNode $table)
+    {
+        $this->recipe = $table->getColumnsHash()[0];
+    }
 }
