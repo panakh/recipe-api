@@ -76,10 +76,10 @@ GET request to localhost:8080/recipes/{id}
 Following error is thrown
 
 .. code-block:: json
-{
-    "code": 404,
-    "message": "Recipe not found"
-}
+    {
+        "code": 404,
+        "message": "Recipe not found"
+    }
 
 When a recipe is not found
 
@@ -96,25 +96,29 @@ Rate an existing recipe between 1 and 5
 PATCH request to localhost:8080/recipes/:id
 
 request body
-{
-    'rating': 3
-}
+
+.. code-block:: json
+    {
+        'rating': 3
+    }
 
 Only 1-5 are allowed
 
 Following NotAcceptable is thrown when the rating is out of range
 
-{
-    "code": 406,
-    "message": "Rating has to be between 1 and 5"
-}
+.. code-block:: json
+    {
+        "code": 406,
+        "message": "Rating has to be between 1 and 5"
+    }
 
 Not found status returned when the recipe is not found
 
-{
-    "code": 404,
-    "message": "Recipe not found"
-}
+.. code-block:: json
+    {
+        "code": 404,
+        "message": "Recipe not found"
+    }
 
 Update an existing recipe
 -------------------------
@@ -123,37 +127,38 @@ PATCH request to localhost:8080/recipes/:id
 
 Not found status returned when the recipe is not found
 
-{
-    "code": 404,
-    "message": "Recipe not found"
-}
+.. code-block:: json
+    {
+        "code": 404,
+        "message": "Recipe not found"
+    }
 
 Creating a Recipe
 --------------------
 
 POST request to localhost:8080/index.php/recipes
-.. code-block:: console
 
-{
-	"title": "asian curry 1",
-	"shortTitle": "asian_curry",
-	"marketingDescription": "asian curry description",
-	"calories": "200",
-	"protein": "22",
-	"fat": "22",
-	"carbs": "22",
-	"bulletPoint1": "b1",
-	"bulletPoint2": "b2",
-	"bulletPoint3": "b3",
-	"dietTypeId": "meat",
-	"season": "all",
-	"base": "noodles",
-	"proteinSource": "beef",
-	"preparationTime": "30",
-	"shelfLife": "2",
-	"equipmentNeeded": "appetite",
-	"originCountry": "uk",
-	"cuisine": "asian",
-	"inYourBox": "in box",
-	"goustoReference": "23"
-}
+.. code-block:: console
+    {
+        "title": "asian curry 1",
+        "shortTitle": "asian_curry",
+        "marketingDescription": "asian curry description",
+        "calories": "200",
+        "protein": "22",
+        "fat": "22",
+        "carbs": "22",
+        "bulletPoint1": "b1",
+        "bulletPoint2": "b2",
+        "bulletPoint3": "b3",
+        "dietTypeId": "meat",
+        "season": "all",
+        "base": "noodles",
+        "proteinSource": "beef",
+        "preparationTime": "30",
+        "shelfLife": "2",
+        "equipmentNeeded": "appetite",
+        "originCountry": "uk",
+        "cuisine": "asian",
+        "inYourBox": "in box",
+        "goustoReference": "23"
+    }
