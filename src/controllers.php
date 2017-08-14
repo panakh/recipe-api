@@ -28,8 +28,23 @@ $app->get('/recipes/{id}', function(int $id) use($app) {
     return new JsonResponse($recipe->getData());
 });
 
+$app->patch('/recipes/{id}', function(int $id, Request $request) use($app) {
+    $recipe = $app['repository.recipe']->getById($id);
+
+    $content = json_decode($request->getContent(), true);
+
+    if (isset($content['rating'])) {
+        $recipe->setRating((int) $content['rating']);
+    }
+
+    $app['repository.recipe']->save($recipe);
+
+    return new JsonResponse($recipe->getData());
+});
+
 $app->get('/recipes', function(Request $request) use ($app) {
     $data = [];
+
     if ($request->query->has('cuisine')) {
         $recipes = $app['repository.recipe']->getByCuisine($request->query->get('cuisine'));
 

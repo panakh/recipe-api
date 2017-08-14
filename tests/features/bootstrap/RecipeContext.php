@@ -4,6 +4,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Gousto\RecipeRepository;
 use PHPUnit\Framework\Assert;
 use SDK\GuzzleClientFactory;
 use SDK\RecipeClient;
@@ -42,7 +43,8 @@ class RecipeContext implements Context
         'origin_country',
         'recipe_cuisine',
         'in_your_box',
-        'gousto_reference'
+        'gousto_reference',
+        'rating'
     ];
     /**
      * @var string
@@ -189,5 +191,23 @@ class RecipeContext implements Context
     public function pageIs(int $page)
     {
         $this->page = $page;
+    }
+
+    /**
+     * @When I rate recipe :recipeId with rating :rating
+     */
+    public function iRateRecipeWithRating(int $recipeId, int $rating)
+    {
+        $this->recipeClient->rateRecipe($recipeId, $rating);
+    }
+
+    /**
+     * @Then recipe :arg1 rating is :arg2
+     */
+    public function recipeRatingIs(int $recipeId, int $rating)
+    {
+        $recipe = $this->recipeClient->getRecipe($recipeId);
+        Assert::assertEquals($recipeId, $recipe['id']);
+        Assert::assertEquals($rating, $recipe['rating']);
     }
 }

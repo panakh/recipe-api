@@ -4,6 +4,7 @@ namespace spec\Gousto;
 
 use DateTime;
 use Gousto\Recipe;
+use InvalidArgumentException;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -175,5 +176,17 @@ class RecipeSpec extends ObjectBehavior
     {
         $this->setSlug('slug');
         $this->getSlug()->shouldBe('slug');
+    }
+
+    function it_can_be_rated()
+    {
+        $this->setRating(3);
+        $this->getRating()->shouldBe(3);
+    }
+
+    function it_cannnot_be_rated_outside_1_to_5()
+    {
+        $this->shouldThrow(InvalidArgumentException::class)->duringSetRating(-1);
+        $this->shouldThrow(InvalidArgumentException::class)->duringSetRating(6);
     }
 }

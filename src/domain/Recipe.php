@@ -3,6 +3,7 @@
 namespace Gousto;
 
 use DateTime;
+use InvalidArgumentException;
 
 class Recipe
 {
@@ -59,8 +60,10 @@ class Recipe
         'origin_country' => 'originCountry',
         'recipe_cuisine' => 'cuisine',
         'in_your_box' => 'inYourBox',
-        'gousto_reference' => 'goustoReference'
+        'gousto_reference' => 'goustoReference',
+        'rating' => 'rating'
     ];
+    private $rating;
 
     public function __construct()
     {
@@ -338,8 +341,8 @@ class Recipe
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->createdAt->format('d-m-Y H:i:s'),
-            'updated_at' => $this->updatedAt->format('d-m-Y H:i:s'),
+            'created_at' => $this->createdAt->format('d/m/Y H:i:s'),
+            'updated_at' => $this->updatedAt->format('d/m/Y H:i:s'),
             'box_type' => $this->boxType,
             'title' => $this->title,
             'slug' => $this->slug,
@@ -362,7 +365,8 @@ class Recipe
             'origin_country' => $this->originCountry,
             'recipe_cuisine' => $this->cuisine,
             'in_your_box' => $this->inYourBox,
-            'gousto_reference' => $this->goustoReference
+            'gousto_reference' => $this->goustoReference,
+            'rating' => $this->rating
         ];
     }
 
@@ -381,7 +385,7 @@ class Recipe
         $this->id = $id;
     }
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -400,5 +404,24 @@ class Recipe
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
+    }
+
+    public function setRating($rating)
+    {
+        if (empty($rating)) {
+            return;
+        }
+
+        $rating = (int) $rating;
+
+        if (!($rating >=1 && $rating <= 5)){
+            throw new InvalidArgumentException('Rating has to be between 1 and 5');
+        }
+        $this->rating  = $rating;
+    }
+
+    public function getRating()
+    {
+        return $this->rating;
     }
 }

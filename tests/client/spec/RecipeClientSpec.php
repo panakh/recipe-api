@@ -27,7 +27,7 @@ class RecipeClientSpec extends ObjectBehavior
             'title' => 'asian curry',
             'marketingDescription' => 'curry description'
         ];
-        $client->post('/recipes', [
+        $client->post('/index_dev.php/recipes', [
             'json' => $recipe
         ])->shouldBeCalled()->willReturn($response);
         $this->createRecipe($recipe);
@@ -36,13 +36,27 @@ class RecipeClientSpec extends ObjectBehavior
     function it_gets_recipe(Client $client, ResponseInterface $response, StreamInterface $contents)
     {
         $response->getBody()->willReturn($contents);
-        $client->get('/recipes/1')->shouldBeCalled()->willReturn($response);
+        $client->get('/index_dev.php/recipes/1')->shouldBeCalled()->willReturn($response);
         $this->getRecipe(1);
     }
 
-    function it_gets_recipes_by_cuisine(Client $client, ResponseInterface $response)
+    function it_gets_recipes_by_cuisine(Client $client, ResponseInterface $response, StreamInterface $contents)
     {
-        $client->get('/recipes?cuisine='.urlencode('asian'))->shouldBeCalled()->willReturn($response);
+        $response->getBody()->willReturn($contents);
+        $client->get('/index_dev.php/recipes?cuisine='.urlencode('asian'))->shouldBeCalled()->willReturn($response);
         $this->getRecipes(['cuisine' => 'asian']);
+    }
+
+    function it_can_rate_recipe(Client $client, ResponseInterface $response)
+    {
+        $recipe = [
+            'rating' => 3
+        ];
+
+        $client->patch('/index_dev.php/recipes/1',[
+              'json' => $recipe
+        ])->shouldBeCalled()->willReturn($response);
+
+        $this->rateRecipe(1, 3);
     }
 }

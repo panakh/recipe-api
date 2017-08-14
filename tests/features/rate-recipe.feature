@@ -1,12 +1,12 @@
-Feature: Fetch recipe
-  In order to see a recipe
-  As a customer
-  I would like to fetch a recipe by its id
+Feature: Create Recipe
+  In order for my clients to see recipes
+  As a business owner
+  I would like create a recipe
 
-  Scenario: Recipe fetch by id
+  @wip
+  Scenario: Rate recipe
     Given recipes
       | id | created_at           | updated_at           | box_type   | title       | slug | short_title | marketing_description    | calories | protein | fat | carbs | bulletPoint1 | bulletPoint2 | bulletPoint3 | dietTypeId | season | base    | proteinSource | preparationTime | shelfLife | equipmentNeeded | originCountry | cuisine | inYourBox | goustoReference |rating|
       | 1  | 30/06/2015  17:58:00 | 30/06/2015  17:58:00 | vegetarian | asian curry | asian-curry | asian_curry | curry description | 200      | 22      | 22  | 22    | b1           | b2           | b3           | meat       | all    | noodles | beef          | 30              | 2         | appetite        | uk            | asian   | in box    | 23              |      |
-      | 2  | 30/06/2015  17:58:00 | 30/06/2015  17:58:00 | vegetarian | thai curry  | thai-curry  | thai_curry | curry description  | 200      | 22      | 22  | 22    | b1           | b2           | b3           | meat       | all    | noodles | beef          | 30              | 2         | appetite        | uk            | asian   | in box    | 23              |      |
-    When I fetch recipe by id "1"
-    Then the recipe is fetched
+    When I rate recipe 1 with rating 3
+    Then recipe 1 rating is 3

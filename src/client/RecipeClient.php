@@ -41,4 +41,16 @@ class RecipeClient
 
         return json_decode($response->getBody()->getContents(), true);
     }
+
+    public function rateRecipe(int $recipeId, int $rating)
+    {
+        $response = $this->client->patch('/index_dev.php/recipes/'.$recipeId, [
+            'json' => [
+                'rating' => $rating
+            ]
+        ]);
+
+        return $response;
+    }
+
 }

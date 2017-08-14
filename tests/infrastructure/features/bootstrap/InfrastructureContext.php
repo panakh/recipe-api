@@ -51,7 +51,8 @@ class InfrastructureContext implements Context
         'origin_country',
         'recipe_cuisine',
         'in_your_box',
-        'gousto_reference'
+        'gousto_reference',
+        'rating'
     ];
     private $fetchedRecipes;
 

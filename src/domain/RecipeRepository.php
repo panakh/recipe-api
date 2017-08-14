@@ -22,7 +22,7 @@ class RecipeRepository
         'bulletpoint1',
         'bulletpoint2',
         'bulletpoint3',
-        'recipe_diet_type',
+        'recipe_diet_type_id',
         'season',
         'base',
         'protein_source',
@@ -32,7 +32,8 @@ class RecipeRepository
         'origin_country',
         'recipe_cuisine',
         'in_your_box',
-        'gousto_reference'
+        'gousto_reference',
+        'rating'
     ];
 
     public function __construct(string $csvPath)
@@ -54,12 +55,22 @@ class RecipeRepository
 
     public function save(Recipe $recipe)
     {
+
+        if (null === $recipe->getId()) {
+            $recipe->setId($this->resolveId());
+        }
+
+        $this->readData();
+        $this->data[$recipe->getId()] = $recipe->getData();
+
+        file_put_contents($this->csv, '');
         $this->createHeadersIfEmptyFile();
-        $recipe->setId($this->resolveId());
+
         $dataHandle = fopen(realpath($this->csv), 'a+');
-        fputcsv($dataHandle, $recipe->getData());
+        foreach($this->data as $datum) {
+            fputcsv($dataHandle, $datum);
+        }
         fclose($dataHandle);
-        $this->data[] = $recipe->getData();
     }
 
     public function hasSaved(Recipe $recipe)
@@ -88,10 +99,11 @@ class RecipeRepository
 
     private function readData()
     {
+        $this->data = [];
         $csv = array_map('str_getcsv', file($this->csv));
         $headers = array_shift($csv);
         foreach ($csv as $values) {
-            $this->data[] = array_combine($headers, $values);
+            $this->data[$values[0]] = array_combine($headers, $values);
         }
     }
 
