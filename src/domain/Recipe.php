@@ -4,7 +4,6 @@ namespace Gousto;
 
 use DateTime;
 use InvalidArgumentException;
-use Symfony\Component\Validator\Constraints\Date;
 
 class Recipe
 {
@@ -380,17 +379,6 @@ class Recipe
             'gousto_reference' => $this->goustoReference,
             'rating' => $this->rating
         ];
-    }
-
-    public function getRepresentationData()
-    {
-        $data = $this->getData();
-        $rewritten = [];
-        foreach(static::$map as $key => $value) {
-            $rewritten[$value] = $data[$key];
-        }
-
-        return $rewritten;
     }
 
     public function setMarketingDescription(string $description)

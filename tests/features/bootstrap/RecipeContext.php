@@ -125,11 +125,12 @@ class RecipeContext implements Context
 
     /**
      * @When I fetch recipe by id :id
+     * @param int $id
      */
     public function iFetchRecipeById(int $id)
     {
         $this->fetchId = $id;
-        $this->fetchedRecipe = $this->recipeClient->getRecipe($id);
+        $this->fetchedRecipe = $this->recipeClient->getRecipe($id)['data'];
     }
 
     /**
@@ -139,7 +140,7 @@ class RecipeContext implements Context
     {
         Assert::assertEquals(
             $this->writtenRecipes[$this->fetchId]['slug'],
-            $this->fetchedRecipe['slug']
+            $this->fetchedRecipe['attributes']['slug']
         );
     }
 
@@ -158,9 +159,10 @@ class RecipeContext implements Context
             ]
         );
 
-        $indexed = [];
-        foreach ($fetchedRecipes as $recipe) {
-            $indexed[$recipe['id']] = $recipe;
+        foreach ($fetchedRecipes['data'] as $recipe) {
+
+            $indexed[$recipe['id']] = $recipe['attributes'];
+            $indexed[$recipe['id']]['id'] = $recipe['id'];
         }
         $this->fetchedRecipes = $indexed;
 
@@ -206,9 +208,9 @@ class RecipeContext implements Context
      */
     public function recipeRatingIs(int $recipeId, int $rating)
     {
-        $recipe = $this->recipeClient->getRecipe($recipeId);
+        $recipe = $this->recipeClient->getRecipe($recipeId)['data'];
         Assert::assertEquals($recipeId, $recipe['id']);
-        Assert::assertEquals($rating, $recipe['rating']);
+        Assert::assertEquals($rating, $recipe['attributes']['rating']);
     }
 
     /**
@@ -228,12 +230,12 @@ class RecipeContext implements Context
     public function recipeIsUpdated(TableNode $table)
     {
         $recipeExpected = $table->getColumnsHash()[0];
-        $recipe = $this->recipeClient->getRecipe($recipeExpected['id']);
+        $recipe = $this->recipeClient->getRecipe($recipeExpected['id'])['data'];
 
         Assert::assertEquals($recipeExpected['id'], $recipe['id']);
         unset($recipeExpected['id']);
         foreach ($recipeExpected as $key => $value) {
-            Assert::assertEquals($value, $recipe[$key]);
+            Assert::assertEquals($value, $recipe['attributes'][$key]);
         }
     }
 }

@@ -1,51 +1,43 @@
 <?php
 
 use Gousto\Recipe;
-use Infrastructure\RecipeMobileTransformer;
 use Infrastructure\TransformerFactory;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
-$app->view(function (array $controllerResult, Request $request) use ($app) {
+$app->view(function ($controllerResult, Request $request) use ($app) {
 
-    $acceptHeader = $request->headers->get('Accept');
+    $acceptHeader = $request->headers->get('Accept', 'application/vnd.mobile+json');
     $priorities   = array('application/vnd.desktop+json', 'application/vnd.mobile+json');
     $mediaType = $app['negotiator']->getBest($acceptHeader, $priorities);
     $bestFormat = $mediaType->getValue();
-
     $resource = null;
-    if ($bestFormat === 'application/vnd.mobile+json') {
-        $resource = new Collection($controllerResult, new RecipeMobileTransformer(), 'recipes');
+
+    if (empty($controllerResult)) {
+        return $app->json([]);
+    }
+
+    if (is_array($controllerResult)) {
+        //collection
+        $transformer = (new TransformerFactory())->createTransformer($bestFormat, get_class($controllerResult[0]));
+        $resource = new Collection($controllerResult, $transformer, 'recipes');
+    }
+
+    if (is_object($controllerResult)) {
+        //single resource
+        $transformer = (new TransformerFactory())->createTransformer($bestFormat, get_class($controllerResult));
+        $resource = new Item($controllerResult, $transformer, 'recipes');
     }
 
     $manager = new Manager();
     $manager->setSerializer(new JsonApiSerializer());
-    return $app->json($manager->createData($resource)->toArray());
-});
 
-$app->view(function (Recipe $recipe, Request $request) use ($app) {
-
-    $acceptHeader = $request->headers->get('Accept');
-    $priorities   = array('application/vnd.desktop+json', 'application/vnd.mobile+json');
-    $mediaType = $app['negotiator']->getBest($acceptHeader, $priorities);
-    $bestFormat = $mediaType->getValue();
-
-    $resource = null;
-    if ($bestFormat === 'application/vnd.mobile+json') {
-        $resource = new Item($recipe, new RecipeMobileTransformer(), 'recipes');
-    }
-
-    $manager = new Manager();
-    $manager->setSerializer(new JsonApiSerializer());
     return $app->json($manager->createData($resource)->toArray());
 });
 
@@ -107,17 +99,14 @@ $app->get('/recipes', function(Request $request) use ($app) {
 });
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
+
     if ($app['debug']) {
         return;
     }
 
-    // 404.html, or 40x.html, or 4xx.html, or error.html
-    $templates = array(
-        'errors/'.$code.'.html.twig',
-        'errors/'.substr($code, 0, 2).'x.html.twig',
-        'errors/'.substr($code, 0, 1).'xx.html.twig',
-        'errors/default.html.twig',
-    );
+    return new JsonResponse([
+        'code'=> $code,
+        'message' => $e->getMessage()
+    ], $code);
 
-    return new Response($app['twig']->resolveTemplate($templates)->render(array('code' => $code)), $code);
 });

@@ -2,7 +2,7 @@ Feature: Fetch recipe
   In order to see a recipe
   As a customer
   I would like to fetch a recipe by its id
-
+  @wip
   Scenario: Recipe fetch by id
     Given recipes
       | id | created_at           | updated_at           | box_type   | title       | slug | short_title | marketing_description    | calories | protein | fat | carbs | bulletPoint1 | bulletPoint2 | bulletPoint3 | dietTypeId | season | base    | proteinSource | preparationTime | shelfLife | equipmentNeeded | originCountry | cuisine | inYourBox | goustoReference |rating|
