@@ -59,10 +59,81 @@ for each relevant representation. Any new consumer that needed to be added will 
 application/vnd.consumer+json. A corresponding entry made into TransformerFactory class and the Transformer class is created to provide
 the relevant representation.
 
+Running Acceptance/Integration tests
+____________________________________
+
+.. code-block:: console
+    $ docker exec -it recipe-api-php-fpm  bash
+    $ vendor/bin/phpspec run && vendor/bin/behat
+
+
+Fetch A Recipe by Id
+--------------------
+Fetch a recipe
+
+GET request to localhost:8080/recipes/{id}
+
+Following error is thrown
+
+.. code-block:: json
+{
+    "code": 404,
+    "message": "Recipe not found"
+}
+
+When a recipe is not found
+
+Fetch All recipes for a cuisine
+-------------------------------
+
+Fetch all recipes for a specific cuisine (should paginate)
+
+GET request to localhost:8080/recipes?cuisine=asian&&page[number]=1&&page[size]=5
+
+Rate an existing recipe between 1 and 5
+---------------------------------------
+
+PATCH request to localhost:8080/recipes/:id
+
+request body
+{
+    'rating': 3
+}
+
+Only 1-5 are allowed
+
+Following NotAcceptable is thrown when the rating is out of range
+
+{
+    "code": 406,
+    "message": "Rating has to be between 1 and 5"
+}
+
+Not found status returned when the recipe is not found
+
+{
+    "code": 404,
+    "message": "Recipe not found"
+}
+
+Update an existing recipe
+-------------------------
+PATCH request to localhost:8080/recipes/:id
+
+
+Not found status returned when the recipe is not found
+
+{
+    "code": 404,
+    "message": "Recipe not found"
+}
+
 Creating a Recipe
 --------------------
 
 POST request to localhost:8080/index.php/recipes
+.. code-block:: console
+
 {
 	"title": "asian curry 1",
 	"shortTitle": "asian_curry",

@@ -50,7 +50,7 @@ class RecipeRepository
             }
         }
 
-        return null;
+        throw new RecipeNotFoundException('Recipe not found');
     }
 
     public function save(Recipe $recipe)
