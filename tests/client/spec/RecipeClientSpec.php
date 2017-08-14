@@ -39,4 +39,10 @@ class RecipeClientSpec extends ObjectBehavior
         $client->get('/recipes/1')->shouldBeCalled()->willReturn($response);
         $this->getRecipe(1);
     }
+
+    function it_gets_recipes_by_cuisine(Client $client, ResponseInterface $response)
+    {
+        $client->get('/recipes?cuisine='.urlencode('asian'))->shouldBeCalled()->willReturn($response);
+        $this->getRecipes(['cuisine' => 'asian']);
+    }
 }

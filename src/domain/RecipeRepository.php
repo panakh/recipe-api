@@ -113,4 +113,18 @@ class RecipeRepository
             fclose($dataHandle);
         }
     }
+
+    public function getByCuisine(string $cuisine): array
+    {
+        $recipes = [];
+        $this->readData();
+        foreach ($this->data as $recipeData) {
+            if ($recipeData['recipe_cuisine'] == $cuisine) {
+                $recipe = Recipe::fromStorage($recipeData);
+                $recipes[$recipe->getId()] = $recipe;
+            }
+        }
+
+        return $recipes;
+    }
 }

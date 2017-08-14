@@ -53,6 +53,7 @@ class InfrastructureContext implements Context
         'in_your_box',
         'gousto_reference'
     ];
+    private $fetchedRecipes;
 
     /**
      * Initializes context.
@@ -138,4 +139,23 @@ class InfrastructureContext implements Context
     {
         Assert::assertEquals($this->writtenRecipes[$this->fetchId]['slug'], $this->fetchedRecipe->getSlug());
     }
+
+    /**
+     * @When I fetch recipes by cuisine :cuisine
+     */
+    public function iFetchRecipesByCuisine(string $cuisine)
+    {
+        $this->fetchedRecipes = $this->recipeRepository->getByCuisine($cuisine);
+    }
+
+    /**
+     * @Then recipes are fetched
+     */
+    public function recipesAreFetched(TableNode $table)
+    {
+        foreach ($table as $recipe) {
+            Assert::assertTrue(array_key_exists($recipe['id'], $this->fetchedRecipes));
+        }
+    }
+
 }

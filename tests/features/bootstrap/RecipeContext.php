@@ -52,6 +52,9 @@ class RecipeContext implements Context
     private $fetchedRecipe;
     private $writtenRecipes = [];
     private $fetchId;
+    private $fetchedRecipes;
+    private $resultsPerPage;
+    private $page;
 
 
     /**
@@ -136,5 +139,55 @@ class RecipeContext implements Context
             $this->writtenRecipes[$this->fetchId]['slug'],
             $this->fetchedRecipe['slug']
         );
+    }
+
+
+    /**
+     * @When I fetch recipe by cuisine :cuisine
+     */
+    public function iFetchRecipeByCuisine(string $cuisine)
+    {
+        $fetchedRecipes = $this->recipeClient->getRecipes([
+                'cuisine' => $cuisine,
+                'page' => [
+                    'size' => $this->resultsPerPage,
+                    'number' => $this->page
+                ]
+            ]
+        );
+
+        $indexed = [];
+        foreach ($fetchedRecipes as $recipe) {
+            $indexed[$recipe['id']] = $recipe;
+        }
+        $this->fetchedRecipes = $indexed;
+
+    }
+
+    /**
+     * @Then recipes are fetched
+     */
+    public function recipesAreFetched(TableNode $table)
+    {
+        Assert::assertEquals(count($table),count($this->fetchedRecipes));
+        foreach ($table as $recipe) {
+            Assert::assertTrue(array_key_exists($recipe['id'], $this->fetchedRecipes));
+        }
+    }
+
+    /**
+     * @Given results per page is :resultsPerPage
+     */
+    public function resultsPerPageIs(int $resultsPerPage)
+    {
+        $this->resultsPerPage = $resultsPerPage;
+    }
+
+    /**
+     * @When page is :page
+     */
+    public function pageIs(int $page)
+    {
+        $this->page = $page;
     }
 }

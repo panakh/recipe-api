@@ -28,6 +28,36 @@ $app->get('/recipes/{id}', function(int $id) use($app) {
     return new JsonResponse($recipe->getData());
 });
 
+$app->get('/recipes', function(Request $request) use ($app) {
+    $data = [];
+    if ($request->query->has('cuisine')) {
+        $recipes = $app['repository.recipe']->getByCuisine($request->query->get('cuisine'));
+
+        $pageNumber = 1;
+        $pageSize = 5;
+
+        if ($request->query->has('page')) {
+
+            $page = $request->query->get('page');
+            if (isset($page['number'])) {
+                $pageNumber = (int) $page['number'];
+            }
+
+            if (isset($page['size'])) {
+                $pageSize = (int) $page['size'];
+            }
+        }
+
+        foreach ($recipes as $recipe) {
+            $data[] = $recipe->getData();
+        }
+
+        $data = array_slice($data, ($pageNumber - 1) * $pageSize, $pageSize);
+    }
+
+    return new JsonResponse($data);
+});
+
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {
         return;
