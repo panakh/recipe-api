@@ -4,6 +4,7 @@ namespace Gousto;
 
 use DateTime;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints\Date;
 
 class Recipe
 {
@@ -92,6 +93,16 @@ class Recipe
         }
 
         return $recipe;
+    }
+
+    public function update(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $setter = 'set'.lcfirst($key);
+            $this->$setter($value);
+        }
+
+        $this->updatedAt = new DateTime();
     }
 
     public function setBoxType(string $boxType)
@@ -355,7 +366,7 @@ class Recipe
             'bulletpoint1' => $this->bulletPoint1,
             'bulletpoint2' => $this->bulletPoint2,
             'bulletpoint3' => $this->bulletPoint3,
-            'recipe_diet_type' => $this->dietTypeId,
+            'recipe_diet_type_id' => $this->dietTypeId,
             'season' => $this->season,
             'base' => $this->base,
             'protein_source' => $this->proteinSource,
@@ -368,6 +379,17 @@ class Recipe
             'gousto_reference' => $this->goustoReference,
             'rating' => $this->rating
         ];
+    }
+
+    public function getRepresentationData()
+    {
+        $data = $this->getData();
+        $rewritten = [];
+        foreach(static::$map as $key => $value) {
+            $rewritten[$value] = $data[$key];
+        }
+
+        return $rewritten;
     }
 
     public function setMarketingDescription(string $description)

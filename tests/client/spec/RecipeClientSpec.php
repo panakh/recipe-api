@@ -59,4 +59,17 @@ class RecipeClientSpec extends ObjectBehavior
 
         $this->rateRecipe(1, 3);
     }
+
+    function it_can_update_recipe(Client $client, ResponseInterface $response)
+    {
+        $recipe = [
+            'rating' => 3
+        ];
+
+        $client->patch('/index_dev.php/recipes/1',[
+            'json' => $recipe
+        ])->shouldBeCalled()->willReturn($response);
+
+        $this->updateRecipe(1, $recipe);
+    }
 }

@@ -25,21 +25,17 @@ $app->post('/recipes', function(Request $request) use ($app) {
 
 $app->get('/recipes/{id}', function(int $id) use($app) {
     $recipe = $app['repository.recipe']->getById($id);
-    return new JsonResponse($recipe->getData());
+    return new JsonResponse($recipe->getRepresentationData());
 });
 
 $app->patch('/recipes/{id}', function(int $id, Request $request) use($app) {
     $recipe = $app['repository.recipe']->getById($id);
 
     $content = json_decode($request->getContent(), true);
-
-    if (isset($content['rating'])) {
-        $recipe->setRating((int) $content['rating']);
-    }
-
+    $recipe->update($content);
     $app['repository.recipe']->save($recipe);
 
-    return new JsonResponse($recipe->getData());
+    return new JsonResponse($recipe->getRepresentationData());
 });
 
 $app->get('/recipes', function(Request $request) use ($app) {
@@ -64,7 +60,7 @@ $app->get('/recipes', function(Request $request) use ($app) {
         }
 
         foreach ($recipes as $recipe) {
-            $data[] = $recipe->getData();
+            $data[] = $recipe->getRepresentationData();
         }
 
         $data = array_slice($data, ($pageNumber - 1) * $pageSize, $pageSize);

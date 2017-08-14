@@ -53,4 +53,13 @@ class RecipeClient
         return $response;
     }
 
+    public function updateRecipe(int $recipeId, array $data)
+    {
+        $response = $this->client->patch('/index_dev.php/recipes/'.$recipeId, [
+            'json' => $data
+        ]);
+
+        return $response;
+    }
+
 }

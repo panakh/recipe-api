@@ -210,4 +210,30 @@ class RecipeContext implements Context
         Assert::assertEquals($recipeId, $recipe['id']);
         Assert::assertEquals($rating, $recipe['rating']);
     }
+
+    /**
+     * @When I update the recipe
+     */
+    public function iUpdateTheRecipe(TableNode $table)
+    {
+        $recipe = $table->getColumnsHash()[0];
+        $id = $recipe['id'];
+        unset($recipe['id']);
+        $this->recipeClient->updateRecipe($id, $recipe);
+    }
+
+    /**
+     * @Then recipe is updated
+     */
+    public function recipeIsUpdated(TableNode $table)
+    {
+        $recipeExpected = $table->getColumnsHash()[0];
+        $recipe = $this->recipeClient->getRecipe($recipeExpected['id']);
+
+        Assert::assertEquals($recipeExpected['id'], $recipe['id']);
+        unset($recipeExpected['id']);
+        foreach ($recipeExpected as $key => $value) {
+            Assert::assertEquals($value, $recipe[$key]);
+        }
+    }
 }
