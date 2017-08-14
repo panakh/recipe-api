@@ -55,7 +55,6 @@ class RecipeRepository
 
     public function save(Recipe $recipe)
     {
-
         if (null === $recipe->getId()) {
             $recipe->setId($this->resolveId());
         }
@@ -75,6 +74,7 @@ class RecipeRepository
 
     public function hasSaved(Recipe $recipe)
     {
+        $this->readData();
         foreach ($this->data as $recipeData) {
             if ($recipeData['id'] == $recipe->getId()) {
                 return true;

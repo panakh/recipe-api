@@ -116,17 +116,17 @@ class Recipe
         $this->createSlug();
     }
 
-    public function getBoxType(): string
+    public function getBoxType()
     {
         return $this->boxType;
     }
 
-    public function getTitle(): string
+    public function getTitle()
     {
         return $this->title;
     }
 
-    public function getSlug():string
+    public function getSlug()
     {
         return $this->slug;
     }
@@ -143,7 +143,7 @@ class Recipe
         $this->shortTitle = $shortTitle;
     }
 
-    public function getShortTitle(): string
+    public function getShortTitle()
     {
         return $this->shortTitle;
     }
@@ -153,7 +153,7 @@ class Recipe
         $this->calories = $calories;
     }
 
-    public function getCalories(): int
+    public function getCalories()
     {
         return $this->calories;
     }
@@ -163,7 +163,7 @@ class Recipe
         $this->protein = $grams;
     }
 
-    public function getProtein(): int
+    public function getProtein()
     {
         return $this->protein;
     }
@@ -173,7 +173,7 @@ class Recipe
         $this->fat = $grams;
     }
 
-    public function getFat(): int
+    public function getFat()
     {
         return $this->fat;
     }
@@ -183,7 +183,7 @@ class Recipe
         $this->carbs = $grams;
     }
 
-    public function getCarbs(): int
+    public function getCarbs()
     {
         return $this->carbs;
     }
@@ -193,7 +193,7 @@ class Recipe
         $this->bulletPoint1 = $bulletPoint;
     }
 
-    public function getBulletPoint1(): string
+    public function getBulletPoint1()
     {
         return $this->bulletPoint1;
     }
@@ -203,7 +203,7 @@ class Recipe
         $this->bulletPoint2 = $bulletPoint;
     }
 
-    public function getBulletPoint2(): string
+    public function getBulletPoint2()
     {
         return $this->bulletPoint2;
     }
@@ -213,7 +213,7 @@ class Recipe
         $this->bulletPoint3 = $bulletPoint;
     }
 
-    public function getBulletPoint3(): string
+    public function getBulletPoint3()
     {
         return $this->bulletPoint3;
     }
@@ -223,7 +223,7 @@ class Recipe
         $this->dietTypeId = $dietTypeId;
     }
 
-    public function getDietTypeId(): string
+    public function getDietTypeId()
     {
         return $this->dietTypeId;
     }
@@ -233,7 +233,7 @@ class Recipe
         $this->season = $season;
     }
 
-    public function getSeason(): string
+    public function getSeason()
     {
         return $this->season;
     }
@@ -243,7 +243,7 @@ class Recipe
         $this->base = $base;
     }
 
-    public function getBase(): string
+    public function getBase()
     {
         return $this->base;
     }
@@ -253,7 +253,7 @@ class Recipe
         $this->proteinSource = $source;
     }
 
-    public function getProteinSource(): string
+    public function getProteinSource()
     {
         return $this->proteinSource;
     }
@@ -263,7 +263,7 @@ class Recipe
         $this->preparationTime = $minutes;
     }
 
-    public function getPreparationTime(): int
+    public function getPreparationTime()
     {
         return $this->preparationTime;
     }
@@ -273,7 +273,7 @@ class Recipe
         $this->shelfLife = $days;
     }
 
-    public function getShelfLife(): int
+    public function getShelfLife()
     {
         return $this->shelfLife;
     }
@@ -303,7 +303,7 @@ class Recipe
         $this->cuisine = $cuisine;
     }
 
-    public function getCuisine(): string
+    public function getCuisine()
     {
         return $this->cuisine;
     }
@@ -313,7 +313,7 @@ class Recipe
         $this->inYourBox = $inYourBox;
     }
 
-    public function getInYourBox(): string
+    public function getInYourBox()
     {
         return $this->inYourBox;
     }
@@ -323,16 +323,16 @@ class Recipe
         $this->goustoReference = $reference;
     }
 
-    public function getGoustoReference(): int
+    public function getGoustoReference()
     {
         return $this->goustoReference;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
@@ -386,7 +386,7 @@ class Recipe
         $this->marketingDescription = $description;
     }
 
-    public function getMarketingDescription(): string
+    public function getMarketingDescription()
     {
         return $this->marketingDescription;
     }

@@ -25,27 +25,35 @@ $app->view(function ($controllerResult, Request $request) use ($app) {
 
     if (is_array($controllerResult)) {
         //collection
-        $transformer = (new TransformerFactory())->createTransformer($bestFormat, get_class($controllerResult[0]));
+        $transformer = $app['transformer_factory']->createTransformer($bestFormat, get_class($controllerResult[0]));
         $resource = new Collection($controllerResult, $transformer, 'recipes');
     }
 
     if (is_object($controllerResult)) {
         //single resource
-        $transformer = (new TransformerFactory())->createTransformer($bestFormat, get_class($controllerResult));
+        $transformer = $app['transformer_factory']->createTransformer($bestFormat, get_class($controllerResult));
         $resource = new Item($controllerResult, $transformer, 'recipes');
     }
 
-    $manager = new Manager();
+    $manager = $app['response_serializer'];
     $manager->setSerializer(new JsonApiSerializer());
 
-    return $app->json($manager->createData($resource)->toArray());
+    $response =$app->json($manager->createData($resource)->toArray());
+    $response->headers->set('Vary', 'Accept');
+
+    if ($request->isMethod('post')){
+        $response->setStatusCode(201);
+    }
+
+    return $response;
+
 });
 
 $app->post('/recipes', function(Request $request) use ($app) {
 
     $recipe = Recipe::fromRepresentation(json_decode($request->getContent(), true));
     $app['repository.recipe']->save($recipe);
-    return new JsonResponse($request->getContent());
+    return $recipe;
 });
 
 $app->get('/recipes/{id}', function(int $id) use($app) {

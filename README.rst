@@ -1,77 +1,88 @@
-Silex Skeleton
+Recipe API
 ==============
 
-Welcome to the Silex Skeleton - a fully-functional Silex application that you
-can use as the skeleton for your new applications.
+Api to manage recipes
 
-This document contains information on how to start using the Silex Skeleton.
-
-Creating a Silex Application
+Running the application
 ----------------------------
 
-Silex uses `Composer`_ to ease the creation of a new project:
-
+* Checkout the latest version
+* Run docker
 .. code-block:: console
 
-    $ composer create-project fabpot/silex-skeleton path/to/install "~2.0"
+    $ docker-composer up -d
 
-Composer will create a new Silex project under the `path/to/install` directory.
 
-Browsing the Demo Application
+Stack
 -----------------------------
 
-Congratulations! You're now ready to use Silex.
+* Silex framework for http
+* Fractal for json api serialization
+* PHPSpec for unit testing
+* Behat for integration/acceptance/end-to-end tests
 
-To see a real-live Silex page in action, start the PHP built-in web server with
-command:
+Reason for choice of framework
+------------------------------
 
-.. code-block:: console
+* Familiarity
+* Lightweight and simple
+* Built on Symfony components with LTS
+* Well established framework
 
-    $ cd path/to/install
-    $ COMPOSER_PROCESS_TIMEOUT=0 composer run
+Src Directory
+_____________________________
+* client - contains SDK classes
+* domain - Minimal domain for the recipe api
+* infrastructure - Infrastructure support suck as serialization transformers
 
-Then, browse to http://localhost:8888/index_dev.php/
+Tests Directory
+-----------------------------
+* client - contains features and spec for the SDK
+* domain - Minimal domain for the recipe api
+* features - API features /acceptance tests
+* infrastructure - Repository tests and other infrastructure component tests
 
-Getting started with Silex
---------------------------
+data Directory
+------------------------------
+Contains csv files for running the test and used by production
 
-This distribution is meant to be the starting point for your Silex applications.
+Consumer Content Negotiation
+______________________________
 
-A great way to start learning Silex is via the `Documentation`_, which will
-take you through all the features of Silex.
+Server driven negotiation with the explicit choice of representation using the Accept Header and Vary is set for caching
 
-What's inside?
----------------
+* application/vnd.mobile+json - for mobile consumers
+* application/vnd.desktop+json - for desktop consumers
 
-The Silex Skeleton is configured with the following service providers:
+In app.php there is the $app->view() method that chooses the representation to serve. A Fractal transformer is defined
+for each relevant representation. Any new consumer that needed to be added will be represented as a new Mime type
+application/vnd.consumer+json. A corresponding entry made into TransformerFactory class and the Transformer class is created to provide
+the relevant representation.
 
-* `ValidatorServiceProvider`_ - Provides a service for validating data. It is
-  most useful when used with the FormServiceProvider, but can also be used
-  standalone.
+Creating a Recipe
+--------------------
 
-* `ServiceControllerServiceProvider`_ - As your Silex application grows, you
-  may wish to begin organizing your controllers in a more formal fashion.
-  Silex can use controller classes out of the box, but with a bit of work,
-  your controllers can be created as services, giving you the full power of
-  dependency injection and lazy loading.
-
-* `TwigServiceProvider`_ - Provides integration with the Twig template engine.
-
-* `WebProfilerServiceProvider`_ - Enable the Symfony web debug toolbar and
-  the Symfony profiler in your Silex application when developing.
-
-* `MonologServiceProvider`_ - Enable logging in the development environment.
-
-Read the `Providers`_ documentation for more details about Silex Service
-Providers.
-
-Enjoy!
-
-.. _Composer: http://getcomposer.org/
-.. _Documentation: http://silex.sensiolabs.org/documentation
-.. _ValidatorServiceProvider: http://silex.sensiolabs.org/doc/master/providers/validator.html
-.. _ServiceControllerServiceProvider: http://silex.sensiolabs.org/doc/master/providers/service_controller.html
-.. _TwigServiceProvider: http://silex.sensiolabs.org/doc/master/providers/twig.html
-.. _WebProfilerServiceProvider: http://github.com/silexphp/Silex-WebProfiler
-.. _MonologServiceProvider: http://silex.sensiolabs.org/doc/master/providers/monolog.html
-.. _Providers: http://silex.sensiolabs.org/doc/providers.html
+POST request to localhost:8080/index.php/recipes
+{
+	"title": "asian curry 1",
+	"shortTitle": "asian_curry",
+	"marketingDescription": "asian curry description",
+	"calories": "200",
+	"protein": "22",
+	"fat": "22",
+	"carbs": "22",
+	"bulletPoint1": "b1",
+	"bulletPoint2": "b2",
+	"bulletPoint3": "b3",
+	"dietTypeId": "meat",
+	"season": "all",
+	"base": "noodles",
+	"proteinSource": "beef",
+	"preparationTime": "30",
+	"shelfLife": "2",
+	"equipmentNeeded": "appetite",
+	"originCountry": "uk",
+	"cuisine": "asian",
+	"inYourBox": "in box",
+	"goustoReference": "23"
+}
