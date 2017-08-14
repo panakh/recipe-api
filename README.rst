@@ -63,6 +63,7 @@ Running Acceptance/Integration tests
 ____________________________________
 
 .. code-block:: console
+
     $ docker exec -it recipe-api-php-fpm  bash
     $ vendor/bin/phpspec run && vendor/bin/behat
 
@@ -76,6 +77,7 @@ GET request to localhost:8080/recipes/{id}
 Following error is thrown
 
 .. code-block:: json
+
     {
         "code": 404,
         "message": "Recipe not found"
@@ -98,6 +100,7 @@ PATCH request to localhost:8080/recipes/:id
 request body
 
 .. code-block:: json
+
     {
         'rating': 3
     }
@@ -107,6 +110,7 @@ Only 1-5 are allowed
 Following NotAcceptable is thrown when the rating is out of range
 
 .. code-block:: json
+
     {
         "code": 406,
         "message": "Rating has to be between 1 and 5"
@@ -115,6 +119,7 @@ Following NotAcceptable is thrown when the rating is out of range
 Not found status returned when the recipe is not found
 
 .. code-block:: json
+
     {
         "code": 404,
         "message": "Recipe not found"
@@ -128,6 +133,7 @@ PATCH request to localhost:8080/recipes/:id
 Not found status returned when the recipe is not found
 
 .. code-block:: json
+
     {
         "code": 404,
         "message": "Recipe not found"
