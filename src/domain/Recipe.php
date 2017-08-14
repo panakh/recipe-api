@@ -64,6 +64,7 @@ class Recipe
         'gousto_reference' => 'goustoReference',
         'rating' => 'rating'
     ];
+
     private $rating;
 
     public function __construct()

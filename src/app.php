@@ -1,6 +1,7 @@
 <?php
 
 use Gousto\RecipeRepository;
+use Negotiation\Negotiator;
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -21,6 +22,10 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
 $app['repository.recipe'] = function($app) {
 
     return new RecipeRepository($app['data.csv']);
+};
+
+$app['negotiator'] = function($app) {
+    return new Negotiator();
 };
 
 return $app;

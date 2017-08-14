@@ -10,3 +10,9 @@ suites:
         psr4_prefix: Gousto
         src_path: %paths.config%/src/domain
         spec_path: %paths.config%/tests/domain
+
+    infrastructure:
+        namespace: Infrastructure
+        psr4_prefix: Infrastructure
+        src_path: %paths.config%/src/infrastructure
+        spec_path: %paths.config%/tests/infrastructure
