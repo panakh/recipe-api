@@ -18,7 +18,7 @@ $app->get('/', function () use ($app) {
 
 $app->post('/recipes', function(Request $request) use ($app) {
 
-    $recipe = Recipe::fromArray(json_decode($request->getContent(), true));
+    $recipe = Recipe::fromRepresentation(json_decode($request->getContent(), true));
     $app['repository.recipe']->save($recipe);
     return new JsonResponse($request->getContent());
 });

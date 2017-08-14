@@ -104,7 +104,7 @@ class InfrastructureContext implements Context
      */
     public function recipe(TableNode $table)
     {
-        $this->recipe = Recipe::fromArray($table->getColumnsHash()[0]);
+        $this->recipe = Recipe::fromRepresentation($table->getColumnsHash()[0]);
     }
 
     /**

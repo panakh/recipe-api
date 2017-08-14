@@ -1,2 +1,0 @@
-id,created_at,updated_at,box_type,title,slug,short_title,marketing_description,calories_kcal,protein_grams,fat_grams,carbs_grams,bulletpoint1,bulletpoint2,bulletpoint3,recipe_diet_type_id,season,base,protein_source,preparation_time_minutes,shelf_life_days,equipment_needed,origin_country,recipe_cuisine,in_your_box,gousto_reference,rating
-1,"30/06/2015 17:58:00","14/08/2017 14:23:16",meat,"asian curry",asian-curry,asian_curry,"curry description",200,22,22,22,b1,b2,b3,meat,all,noodles,beef,30,2,appetite,uk,asian,"in box",23,

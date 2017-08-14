@@ -84,7 +84,7 @@ class Recipe
         return $recipe;
     }
 
-    public static function fromArray(array $data)
+    public static function fromRepresentation(array $data)
     {
         $recipe = new static();
         foreach ($data as $key => $value) {
