@@ -8,6 +8,10 @@ Running the application
 
 * Checkout the latest version
 * composer install - make sure you run this outside the docker container to avoid of permission issues
+.. code-block:: console
+
+    $ composer install
+
 * Run docker
 .. code-block:: console
 
