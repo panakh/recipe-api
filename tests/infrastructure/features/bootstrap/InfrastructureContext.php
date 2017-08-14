@@ -22,6 +22,37 @@ class InfrastructureContext implements Context
     private $csvPath;
     private $recipeRepository;
     private $recipe;
+    private $fetchedRecipe;
+    private $fetchId;
+    private $writtenRecipes = [];
+    private $schema = [
+        'id',
+        'created_at',
+        'updated_at',
+        'box_type',
+        'title',
+        'slug',
+        'short_title',
+        'marketing_description',
+        'calories_kcal',
+        'protein_grams',
+        'fat_grams',
+        'carbs_grams',
+        'bulletpoint1',
+        'bulletpoint2',
+        'bulletpoint3',
+        'recipe_diet_type_id',
+        'season',
+        'base',
+        'protein_source',
+        'preparation_time_minutes',
+        'shelf_life_days',
+        'equipment_needed',
+        'origin_country',
+        'recipe_cuisine',
+        'in_your_box',
+        'gousto_reference'
+    ];
 
     /**
      * Initializes context.
@@ -39,28 +70,31 @@ class InfrastructureContext implements Context
 
     /**
      * @AfterScenario
+     * @BeforeScenario
      */
     public function cleanFile()
     {
         file_put_contents($this->csvPath, '');
     }
 
+    public function writeHeaders()
+    {
+        file_put_contents($this->csvPath, implode(',', $this->schema) . "\n");
+    }
     /**
      * @Given recipes
      */
     public function recipes(TableNode $table)
     {
-        file_put_contents(
-            $this->csvPath,
-            implode("\n",
-                array_map(
-                    function($row) {
-                        return implode(",", $row);
-                    },
-                    $table->getRows()
-                )
-            ),
-            FILE_APPEND);
+        $this->writeHeaders();
+
+        $handle = fopen($this->csvPath, 'a+');
+
+        foreach ($table as $recipe) {
+            fputcsv($handle, $recipe);
+            $this->writtenRecipes[$recipe['id']] = $recipe;
+        }
+        fclose($handle);
     }
 
     /**
@@ -68,7 +102,7 @@ class InfrastructureContext implements Context
      */
     public function recipe(TableNode $table)
     {
-        $this->recipe = Recipe::fromData($table->getColumnsHash()[0]);
+        $this->recipe = Recipe::fromArray($table->getColumnsHash()[0]);
     }
 
     /**
@@ -86,5 +120,22 @@ class InfrastructureContext implements Context
     {
         Assert::assertEquals(1, $this->recipe->getId());
         Assert::assertTrue($this->recipeRepository->hasSaved($this->recipe));
+    }
+
+    /**
+     * @When I fetch recipe by id :id
+     */
+    public function iFetchRecipeById(int $id)
+    {
+        $this->fetchId = $id;
+        $this->fetchedRecipe = $this->recipeRepository->getById($id);
+    }
+
+    /**
+     * @Then the recipe is fetched
+     */
+    public function theRecipeIsFetched()
+    {
+        Assert::assertEquals($this->writtenRecipes[$this->fetchId]['slug'], $this->fetchedRecipe->getSlug());
     }
 }

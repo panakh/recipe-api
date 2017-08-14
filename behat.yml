@@ -7,11 +7,11 @@ default:
                   baseUrl: recipe-api-webserver:80
                   csvPath: %paths.base%/data/recipe-data-test.csv
 
-        sdk_csv_access:
-            paths:    [ %paths.base%/tests/sdk_csv_access/features ]
-            contexts:
-              - CSVAccessContext:
-                  csvPath: %paths.base%/data/recipe-data-test.csv
+#        sdk_csv_access:
+#            paths:    [ %paths.base%/tests/sdk_csv_access/features ]
+#            contexts:
+#              - CSVAccessContext:
+#                  csvPath: %paths.base%/data/recipe-data-test.csv
 
         infrastructure:
             paths:    [ %paths.base%/tests/infrastructure/features ]

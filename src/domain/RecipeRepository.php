@@ -40,6 +40,18 @@ class RecipeRepository
         $this->csv = $csvPath;
     }
 
+    public function getById(int $id): Recipe
+    {
+        $this->readData();
+        foreach ($this->data as $datum) {
+            if ($datum['id'] == $id) {
+                return Recipe::fromStorage($datum);
+            }
+        }
+
+        return null;
+    }
+
     public function save(Recipe $recipe)
     {
         $this->createHeadersIfEmptyFile();

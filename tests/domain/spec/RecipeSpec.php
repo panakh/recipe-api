@@ -149,18 +149,19 @@ class RecipeSpec extends ObjectBehavior
 
     function it_has_created_date()
     {
-        $this->getCreatedDate()->shouldBeAnInstanceOf(DateTime::class);
+        $this->setCreatedAt(new DateTime());
+        $this->getCreatedAt()->shouldBeAnInstanceOf(DateTime::class);
     }
 
     function it_has_updated_date()
     {
-        $this->setUpdatedDate(new DateTime());
-        $this->getUpdatedDate()->shouldBeAnInstanceOf(DateTime::class);
+        $this->setUpdatedAt(new DateTime());
+        $this->getUpdatedAt()->shouldBeAnInstanceOf(DateTime::class);
     }
 
     function its_constructed_from_array()
     {
-        $this->beConstructedThrough('fromData', [['title'=> 'title']]);
+        $this->beConstructedThrough('fromStorage', [['title'=> 'title']]);
         $this->getTitle()->shouldBe('title');
     }
 
@@ -168,5 +169,11 @@ class RecipeSpec extends ObjectBehavior
     {
         $this->setTitle('title');
         $this->getData()['title']->shouldBe('title');
+    }
+
+    function it_sets_slug()
+    {
+        $this->setSlug('slug');
+        $this->getSlug()->shouldBe('slug');
     }
 }

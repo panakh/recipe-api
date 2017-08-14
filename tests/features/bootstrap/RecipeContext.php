@@ -16,11 +16,42 @@ class RecipeContext implements Context
 {
     private $recipeClient;
     private $recipeCSVAccess;
+    private $schema = [
+        'id',
+        'created_at',
+        'updated_at',
+        'box_type',
+        'title',
+        'slug',
+        'short_title',
+        'marketing_description',
+        'calories_kcal',
+        'protein_grams',
+        'fat_grams',
+        'carbs_grams',
+        'bulletpoint1',
+        'bulletpoint2',
+        'bulletpoint3',
+        'recipe_diet_type_id',
+        'season',
+        'base',
+        'protein_source',
+        'preparation_time_minutes',
+        'shelf_life_days',
+        'equipment_needed',
+        'origin_country',
+        'recipe_cuisine',
+        'in_your_box',
+        'gousto_reference'
+    ];
     /**
      * @var string
      */
     private $csvPath;
     private $recipe;
+    private $fetchedRecipe;
+    private $writtenRecipes = [];
+    private $fetchId;
 
 
     /**
@@ -42,38 +73,9 @@ class RecipeContext implements Context
     /**
      * @BeforeScenario
      */
-    public function deleteRecords()
+    public function writeHeaders()
     {
-        $headers = [
-            'id',
-            'created_at',
-            'updated_at',
-            'box_type',
-            'title',
-            'slug',
-            'short_title',
-            'marketing_description',
-            'calories_kcal',
-            'protein_grams',
-            'fat_grams',
-            'carbs_grams',
-            'bulletpoint1',
-            'bulletpoint2',
-            'bulletpoint3',
-            'recipe_diet_type',
-            'season',
-            'base',
-            'protein_source',
-            'preparation_time_minutes',
-            'shelf_life_days',
-            'equipment_needed',
-            'origin_country',
-            'recipe_cuisine',
-            'in_your_box',
-            'gousto_reference'
-        ];
-
-        file_put_contents($this->csvPath, implode(',', $headers) . "\n");
+        file_put_contents($this->csvPath, implode(',', $this->schema) . "\n");
     }
 
     /**
@@ -99,5 +101,40 @@ class RecipeContext implements Context
     public function recipe(TableNode $table)
     {
         $this->recipe = $table->getColumnsHash()[0];
+    }
+
+    /**
+     * @Given recipes
+     */
+    public function recipes(TableNode $table)
+    {
+        $this->writeHeaders();
+        $handle = fopen($this->csvPath, 'a+');
+
+        foreach ($table->getColumnsHash() as $recipe) {
+            fputcsv($handle, $recipe);
+            $this->writtenRecipes[$recipe['id']] = $recipe;
+        }
+        fclose($handle);
+    }
+
+    /**
+     * @When I fetch recipe by id :id
+     */
+    public function iFetchRecipeById(int $id)
+    {
+        $this->fetchId = $id;
+        $this->fetchedRecipe = $this->recipeClient->getRecipe($id);
+    }
+
+    /**
+     * @Then the recipe is fetched
+     */
+    public function theRecipeIsFetched()
+    {
+        Assert::assertEquals(
+            $this->writtenRecipes[$this->fetchId]['slug'],
+            $this->fetchedRecipe['slug']
+        );
     }
 }

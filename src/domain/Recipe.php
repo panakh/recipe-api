@@ -2,7 +2,6 @@
 
 namespace Gousto;
 
-
 use DateTime;
 
 class Recipe
@@ -29,22 +28,63 @@ class Recipe
     private $cuisine;
     private $inYourBox;
     private $goustoReference;
-    private $createdDate;
-    private $updatedDate;
+    private $createdAt;
+    private $updatedAt;
     private $marketingDescription;
     private $id;
 
+    static $map = [
+        'id' => 'id',
+        'created_at' => 'createdAt',
+        'updated_at' => 'updatedAt',
+        'box_type' => 'boxType',
+        'title' => 'title',
+        'slug' => 'slug',
+        'short_title' => 'shortTitle',
+        'marketing_description' => 'marketingDescription',
+        'calories_kcal' => 'calories',
+        'protein_grams' => 'protein',
+        'fat_grams' => 'fat',
+        'carbs_grams' => 'carbs',
+        'bulletpoint1' => 'bulletPoint1',
+        'bulletpoint2' => 'bulletPoint2',
+        'bulletpoint3' => 'bulletPoint3',
+        'recipe_diet_type_id' => 'dietTypeId',
+        'season' => 'season',
+        'base' => 'base',
+        'protein_source' => 'proteinSource',
+        'preparation_time_minutes' => 'preparationTime',
+        'shelf_life_days' => 'shelfLife',
+        'equipment_needed' => 'equipmentNeeded',
+        'origin_country' => 'originCountry',
+        'recipe_cuisine' => 'cuisine',
+        'in_your_box' => 'inYourBox',
+        'gousto_reference' => 'goustoReference'
+    ];
+
     public function __construct()
     {
-        $this->createdDate = new DateTime();
-        $this->updatedDate = $this->createdDate;
+        $this->createdAt = $this->updatedAt = new DateTime();
     }
 
-    public static function fromData(array $data)
+    public static function fromStorage(array $data)
     {
         $recipe = new static();
         foreach ($data as $key => $value) {
-            $setter = 'set'.$key;
+
+            $property = static::$map[$key];
+            $setter = 'set'.lcfirst($property);
+            $recipe->$setter($value);
+        }
+
+        return $recipe;
+    }
+
+    public static function fromArray(array $data)
+    {
+        $recipe = new static();
+        foreach ($data as $key => $value) {
+            $setter = 'set'.lcfirst($key);
             $recipe->$setter($value);
         }
 
@@ -274,26 +314,32 @@ class Recipe
         return $this->goustoReference;
     }
 
-    public function getCreatedDate(): DateTime
+    public function getCreatedAt(): DateTime
     {
-        return $this->createdDate;
+        return $this->createdAt;
     }
-    public function getUpdatedDate(): DateTime
+    public function getUpdatedAt(): DateTime
     {
-        return $this->updatedDate;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedDate(DateTime $dateTime)
+    public function setUpdatedAt($dateTime)
     {
-        $this->updatedDate = $dateTime;
+        $updatedAt = null;
+        if (is_string($dateTime)) {
+            $updatedAt = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime);
+        } else if ($dateTime instanceof DateTime) {
+            $updatedAt = $dateTime;
+        }
+        $this->updatedAt = $updatedAt;
     }
 
     public function getData()
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->createdDate->format('d-m-Y H:i:s'),
-            'updated_at' => $this->updatedDate->format('d-m-Y H:i:s'),
+            'created_at' => $this->createdAt->format('d-m-Y H:i:s'),
+            'updated_at' => $this->updatedAt->format('d-m-Y H:i:s'),
             'box_type' => $this->boxType,
             'title' => $this->title,
             'slug' => $this->slug,
@@ -338,5 +384,21 @@ class Recipe
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setCreatedAt($dateTime)
+    {
+        $createdAt = null;
+        if (is_string($dateTime)) {
+            $createdAt = DateTime::createFromFormat('d/m/Y H:i:s', $dateTime);
+        } else if ($dateTime instanceof DateTime) {
+            $createdAt = $dateTime;
+        }
+        $this->createdAt = $createdAt;
+    }
+
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
     }
 }

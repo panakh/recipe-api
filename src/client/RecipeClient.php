@@ -26,4 +26,11 @@ class RecipeClient
 
         return $response;
     }
+
+    public function getRecipe(int $id)
+    {
+        $response = $this->client->get('/recipes/'.$id);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
 }

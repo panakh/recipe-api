@@ -18,9 +18,14 @@ $app->get('/', function () use ($app) {
 
 $app->post('/recipes', function(Request $request) use ($app) {
 
-    $recipe = Recipe::fromData(json_decode($request->getContent(), true));
+    $recipe = Recipe::fromArray(json_decode($request->getContent(), true));
     $app['repository.recipe']->save($recipe);
-    return new Response($request->getContent());
+    return new JsonResponse($request->getContent());
+});
+
+$app->get('/recipes/{id}', function(int $id) use($app) {
+    $recipe = $app['repository.recipe']->getById($id);
+    return new JsonResponse($recipe->getData());
 });
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
