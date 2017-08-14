@@ -138,7 +138,7 @@ Creating a Recipe
 
 POST request to localhost:8080/index.php/recipes
 
-.. code-block:: console
+.. code-block:: json
     {
         "title": "asian curry 1",
         "shortTitle": "asian_curry",
